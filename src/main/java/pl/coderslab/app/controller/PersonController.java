@@ -22,7 +22,7 @@ public class PersonController {
     }
 
     @RequestMapping("/add")
-    public void add(Person person){
+    public void create(Person person){
         Person person1 = new Person();
         PersonDetails personDetails =
                 new PersonDetails("Szymon","Stankowski", 12, "Lokietka", "poznan");
@@ -65,17 +65,14 @@ public class PersonController {
     @GetMapping("/add")
 
     public String addForm(Model model){
+        model.addAttribute("person", new Person());
 
         return "person-form";
     }
 
     @PostMapping("/add")
     @ResponseBody
-    public String add(@RequestParam("login") String login,
-                      @RequestParam("password") String password,
-                      @RequestParam("email") String email){
-        Person person = new Person(null, null, login,password,email);
-
+    public String add(Person person){
         personDao.save(person);
         return person.toString();
     }

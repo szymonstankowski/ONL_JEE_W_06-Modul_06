@@ -1,16 +1,15 @@
 package pl.coderslab.app.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.app.dao.PersonDao;
 import pl.coderslab.app.dao.PersonDetailsDao;
 import pl.coderslab.app.entity.Person;
 import pl.coderslab.app.entity.PersonDetails;
 
 @Controller
-@RequestMapping("/person")
+@RequestMapping("/persons")
 public class PersonController {
 
 
@@ -61,6 +60,24 @@ public class PersonController {
         Person person = personDao.findById(id);
         personDao.delete(person);
         return "deleted";
+    }
+
+    @GetMapping("/add")
+
+    public String addForm(Model model){
+
+        return "person-form";
+    }
+
+    @PostMapping("/add")
+    @ResponseBody
+    public String add(@RequestParam("login") String login,
+                      @RequestParam("password") String password,
+                      @RequestParam("email") String email){
+        Person person = new Person(null, null, login,password,email);
+
+        personDao.save(person);
+        return person.toString();
     }
 }
 

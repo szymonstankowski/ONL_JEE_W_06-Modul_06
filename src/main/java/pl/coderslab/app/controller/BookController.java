@@ -15,6 +15,7 @@ import pl.coderslab.app.dao.PublisherDao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequestMapping("/books")
@@ -43,7 +44,6 @@ public class BookController {
 
         list.add(winston);
         list.add(szymon);
-
 
 
         Publisher publisher = new Publisher();
@@ -102,7 +102,7 @@ public class BookController {
 
     @RequestMapping
     @ResponseBody
-    public String findAll(){
+    public String findAll() {
         List<Book> list = bookDao.findAll();
 
         return list.stream()
@@ -112,12 +112,42 @@ public class BookController {
 
     @RequestMapping("/rating/{rating}")
     @ResponseBody
-    public String getBooksByRating(@PathVariable int rating){
+    public String getBooksByRating(@PathVariable int rating) {
         List<Book> list = bookDao.findByRating(rating);
 
         return list.stream()
                 .map(Book::toString)
                 .collect(Collectors.joining(" ||| "));
     }
+
+
+    @RequestMapping("/byPublisher")
+    @ResponseBody
+    public String getBooksWithPublisher() {
+        List<Book> booksWithPublisher = bookDao.findBooksWithPublisher();
+        return booksWithPublisher.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(" ||| "));
+    }
+
+    @RequestMapping("/publisher/{name}")
+    @ResponseBody
+    public String getBooksWithSpecificPublisher(@PathVariable String name) {
+        List<Book> bySpecificPublisher = bookDao.findBySpecificPublisher(name);
+        return bySpecificPublisher.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(" ||| "));
+    }
+
+    @RequestMapping("/authors/{name}")
+    @ResponseBody
+    public String getBooksOfAnAuthor(@PathVariable String name){
+        List<Book> bookWithAnAuthor = bookDao.findBookWithAnAuthor(name);
+
+        return bookWithAnAuthor.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(" ||| "));
+    }
+
 
 }

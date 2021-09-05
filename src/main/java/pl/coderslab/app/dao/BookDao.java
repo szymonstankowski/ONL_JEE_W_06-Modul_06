@@ -41,17 +41,30 @@ public class BookDao {
     }
 
 
-
     public List<Book> findByRating(int rating){
         Query query = entityManager.createQuery("SELECT b FROM Book b WHERE b.rating > :rating");
         query.setParameter("rating", rating);
         return query.getResultList();
     }
 
-//    public List<Book> findBooksWithPublisher(){
-//        Query query = entityManager.createQuery("SELECT b FROM Book WHERE Publisher  null");
-//        return query.getResultList();
-//    }
+    public List<Book> findBooksWithPublisher(){
+        Query query = entityManager.createQuery("SELECT b FROM Book b join FETCH b.publisher");
+        return query.getResultList();
+
+    }
+
+    public List<Book> findBySpecificPublisher(String name){
+        Query query = entityManager.createQuery("select b from Book b join fetch b.publisher where b.publisher.name = :name ");
+        query.setParameter("name", name);
+        return query.getResultList();
+    }
+
+    public List<Book> findBookWithAnAuthor(String author){
+        Query query = entityManager.createQuery("select b from Book b where :author member of b.authors");
+        query.setParameter("author", author);
+        return query.getResultList();
+
+    }
 
 
 }

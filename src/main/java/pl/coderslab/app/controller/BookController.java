@@ -15,6 +15,7 @@ import pl.coderslab.app.dao.PublisherDao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("/books")
 @Controller
@@ -99,5 +100,24 @@ public class BookController {
                 + book.getId();
     }
 
+    @RequestMapping
+    @ResponseBody
+    public String findAll(){
+        List<Book> list = bookDao.findAll();
+
+        return list.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(" ||| "));
+    }
+
+    @RequestMapping("/rating/{rating}")
+    @ResponseBody
+    public String getBooksByRating(@PathVariable int rating){
+        List<Book> list = bookDao.findByRating(rating);
+
+        return list.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(" ||| "));
+    }
 
 }

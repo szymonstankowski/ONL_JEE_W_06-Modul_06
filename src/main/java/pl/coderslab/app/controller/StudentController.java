@@ -13,21 +13,15 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController {
 
-
-
-
-
     @ModelAttribute("programmingSkills")
     public List<String> programmingSkills() {
         return Arrays.asList("Java", "Python", "Ruby", "C++", "JavaScript", "C#");
     }
 
-
     @ModelAttribute("countries")
     public List<String> countries() {
         return Arrays.asList("Poland", "Germany", "France", "Russia", "Denmark");
     }
-
 
     @ModelAttribute("hobbies")
     public List<String> hobbies() {
@@ -47,9 +41,5 @@ public class StudentController {
 
         return student.toString();
     }
-
-
-
-
-
+    
 }

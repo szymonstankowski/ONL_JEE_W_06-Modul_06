@@ -2,10 +2,8 @@ package pl.coderslab.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.app.dao.AuthorDao;
 import pl.coderslab.app.entity.Author;
 import pl.coderslab.app.entity.Book;
@@ -69,6 +67,8 @@ public class BookController {
         return book.toString();
     }
 
+
+
     @RequestMapping("/update/{id}")
     @ResponseBody
     public String updateBook(@PathVariable long id) {
@@ -80,12 +80,35 @@ public class BookController {
         return book.toString();
     }
 
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable int id, Model model){
+        Book book = bookDao.findById(id);
+
+        model.addAttribute("book", book);
+
+        return "book-edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable int id, Book book){
+        Book bookToUpdate = bookDao.findById(id);
+        bookToUpdate.setAuthors(book.getAuthors());
+        bookToUpdate.setRating(book.getRating());
+        bookToUpdate.setPublisher(book.getPublisher());
+        bookToUpdate.setTitle(book.getTitle());
+        bookToUpdate.setDescription(book.getDescription());
+
+        bookDao.update(bookToUpdate);
+
+        return "redirect:/books";
+    }
+
     @RequestMapping("/delete/{id}")
     @ResponseBody
     public String deleteBook(@PathVariable long id) {
         Book book = bookDao.findById(id);
         bookDao.delete(book);
-        return "deleted";
+        return "/books";
     }
 
     @RequestMapping("/add")
@@ -107,7 +130,20 @@ public class BookController {
 
         return list.stream()
                 .map(Book::toString)
-                .collect(Collectors.joining(" ||| "));
+                .collect(Collectors.joining("<br>"));
+    }
+
+
+
+
+
+    @RequestMapping("/editBooks")
+    public String findAllBooks(Model model) {
+        List<Book> list = bookDao.findAll();
+
+
+        model.addAttribute("allBooks",list);
+        return "book-list-form";
     }
 
     @RequestMapping("/rating/{rating}")
@@ -147,6 +183,22 @@ public class BookController {
         return bookWithAnAuthor.stream()
                 .map(Book::toString)
                 .collect(Collectors.joining(" ||| "));
+    }
+
+    @GetMapping("/add")
+    public String createForm(Model model){
+        model.addAttribute("book", new Book());
+        return "book-form";
+    }
+    @PostMapping("/add")
+    public String create(Book book){
+        bookDao.save(book);
+        return "redirect/books";
+    }
+
+    @ModelAttribute("publishers")
+    public List<Publisher> getPublishers(){
+        return publisherDao.findAll();
     }
 
 

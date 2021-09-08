@@ -31,34 +31,33 @@ public class BookController {
         this.authorDao = authorDao;
     }
 
-
-    @GetMapping("/addWithPublisherAuthors")
-    @ResponseBody
-    public String add() {
-
-        List<Author> list = new ArrayList<>();
-        Author winston = authorDao.findById(1);
-        Author szymon = authorDao.findById(2);
-
-        list.add(winston);
-        list.add(szymon);
-
-
-        Publisher publisher = new Publisher();
-
-        publisher.setName("WSiP");
-        publisherDao.save(publisher);
-
-        Book book = new Book();
-        book.setTitle("Forrest Gump");
-        book.setDescription("ksiazka przygodowa");
-        book.setRating(9);
-        book.setPublisher(publisher);
-        book.setAuthors(list);
-        bookDao.save(book);
-        return book.toString();
-
+    @RequestMapping("/editBooks")
+    public String findAllBooks(Model model) {
+        List<Book> list = bookDao.findAll();
+        model.addAttribute("allBooks",list);
+        return "book-list-form";
     }
+
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable int id, Model model){
+        Book book = bookDao.findById(id);
+        model.addAttribute("book", book);
+        return "book-edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String edit(@PathVariable int id, Book book){
+        Book bookToUpdate = bookDao.findById(id);
+        bookToUpdate.setAuthors(book.getAuthors());
+        bookToUpdate.setRating(book.getRating());
+        bookToUpdate.setPublisher(book.getPublisher());
+        bookToUpdate.setTitle(book.getTitle());
+        bookToUpdate.setDescription(book.getDescription());
+        bookDao.update(bookToUpdate);
+        return "redirect:/books/editBooks";
+    }
+
+
 
     @RequestMapping("/get/{id}")
     @ResponseBody
@@ -80,28 +79,9 @@ public class BookController {
         return book.toString();
     }
 
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable int id, Model model){
-        Book book = bookDao.findById(id);
 
-        model.addAttribute("book", book);
 
-        return "book-edit";
-    }
 
-    @PostMapping("/edit/{id}")
-    public String edit(@PathVariable int id, Book book){
-        Book bookToUpdate = bookDao.findById(id);
-        bookToUpdate.setAuthors(book.getAuthors());
-        bookToUpdate.setRating(book.getRating());
-        bookToUpdate.setPublisher(book.getPublisher());
-        bookToUpdate.setTitle(book.getTitle());
-        bookToUpdate.setDescription(book.getDescription());
-
-        bookDao.update(bookToUpdate);
-
-        return "redirect:/books";
-    }
 
     @RequestMapping("/delete/{id}")
     @ResponseBody
@@ -137,14 +117,7 @@ public class BookController {
 
 
 
-    @RequestMapping("/editBooks")
-    public String findAllBooks(Model model) {
-        List<Book> list = bookDao.findAll();
 
-
-        model.addAttribute("allBooks",list);
-        return "book-list-form";
-    }
 
     @RequestMapping("/rating/{rating}")
     @ResponseBody
@@ -199,6 +172,34 @@ public class BookController {
     @ModelAttribute("publishers")
     public List<Publisher> getPublishers(){
         return publisherDao.findAll();
+    }
+
+    @GetMapping("/addWithPublisherAuthors")
+    @ResponseBody
+    public String add() {
+
+        List<Author> list = new ArrayList<>();
+        Author winston = authorDao.findById(1);
+        Author szymon = authorDao.findById(2);
+
+        list.add(winston);
+        list.add(szymon);
+
+
+        Publisher publisher = new Publisher();
+
+        publisher.setName("WSiP");
+        publisherDao.save(publisher);
+
+        Book book = new Book();
+        book.setTitle("Forrest Gump");
+        book.setDescription("ksiazka przygodowa");
+        book.setRating(9);
+        book.setPublisher(publisher);
+        book.setAuthors(list);
+        bookDao.save(book);
+        return book.toString();
+
     }
 
 

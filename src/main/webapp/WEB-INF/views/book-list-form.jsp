@@ -11,7 +11,6 @@
     ${book.description}
     <a href="/books/edit/${book.id}">Edit</a> <br/>
     <a href="/books/delete/${book.id}">Delete</a> <br/>
-
 </c:forEach>
 
 </body>

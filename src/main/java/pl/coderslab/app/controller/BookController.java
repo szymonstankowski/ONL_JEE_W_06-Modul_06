@@ -45,6 +45,7 @@ public class BookController {
         return "book-edit";
     }
 
+
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable int id, Book book){
         Book bookToUpdate = bookDao.findById(id);
@@ -57,7 +58,19 @@ public class BookController {
         return "redirect:/books/editBooks";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteBook(@PathVariable long id, Model model) {
+        Book book = bookDao.findById(id);
+        model.addAttribute("book", book);
+        return "confirm";
+    }
+    @PostMapping("/delete/{id}")
+    public String confirmDelete(@PathVariable long id){
+        Book book = bookDao.findById(id);
+        bookDao.delete(book);
+        return "redirect:books/editBooks";
 
+    }
 
     @RequestMapping("/get/{id}")
     @ResponseBody
@@ -65,8 +78,6 @@ public class BookController {
         Book book = bookDao.findById(id);
         return book.toString();
     }
-
-
 
     @RequestMapping("/update/{id}")
     @ResponseBody
@@ -79,17 +90,6 @@ public class BookController {
         return book.toString();
     }
 
-
-
-
-
-    @RequestMapping("/delete/{id}")
-    @ResponseBody
-    public String deleteBook(@PathVariable long id) {
-        Book book = bookDao.findById(id);
-        bookDao.delete(book);
-        return "/books";
-    }
 
     @RequestMapping("/add")
     @ResponseBody
@@ -113,22 +113,14 @@ public class BookController {
                 .collect(Collectors.joining("<br>"));
     }
 
-
-
-
-
-
-
     @RequestMapping("/rating/{rating}")
     @ResponseBody
     public String getBooksByRating(@PathVariable int rating) {
         List<Book> list = bookDao.findByRating(rating);
-
         return list.stream()
                 .map(Book::toString)
                 .collect(Collectors.joining(" ||| "));
     }
-
 
     @RequestMapping("/byPublisher")
     @ResponseBody
@@ -185,7 +177,6 @@ public class BookController {
         list.add(winston);
         list.add(szymon);
 
-
         Publisher publisher = new Publisher();
 
         publisher.setName("WSiP");
@@ -199,8 +190,6 @@ public class BookController {
         book.setAuthors(list);
         bookDao.save(book);
         return book.toString();
-
     }
-
 
 }

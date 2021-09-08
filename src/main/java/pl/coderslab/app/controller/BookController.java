@@ -165,6 +165,10 @@ public class BookController {
     public List<Publisher> getPublishers(){
         return publisherDao.findAll();
     }
+    @ModelAttribute("authors")
+    public List<Author> getAuthors(){
+        return authorDao.findAll();
+    }
 
     @GetMapping("/addWithPublisherAuthors")
     @ResponseBody

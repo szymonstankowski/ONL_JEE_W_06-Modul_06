@@ -11,8 +11,6 @@ Edycja ksiazki
     rating <form:input path="rating"/><br/>
     description <form:input path="description"/><br/>
 
-    <form:select path="authors" items="${authors}" itemLabel="name" itemValue="id"/><br/>
-
     <form:select path="publisher" items="${publishers}" itemLabel="name" itemValue="id"/><br/>
 
     <input type="submit" value="Update">

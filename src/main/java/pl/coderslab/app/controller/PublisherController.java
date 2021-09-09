@@ -59,7 +59,8 @@ public class PublisherController {
         return "publisher-confirm";
     }
 
-    @PostMapping
+    @PostMapping("/deletePublisher/{id}")
+    @ResponseBody
     public String deletePublisher(@PathVariable long id){
         Publisher publisher = publisherDao.findById(id);
         publisherDao.delete(publisher);

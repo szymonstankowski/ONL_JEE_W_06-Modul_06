@@ -16,8 +16,9 @@
 </c:forEach>
 <br>
 Ile artykulow chcesz zobaczyc:<br>
-<form action="/home/limit" method="get">
+<form action="/home/limit" method="post">
     <input type="number" name="limit">
+    <input type="submit" value="Pokaz">
 </form>
 
 

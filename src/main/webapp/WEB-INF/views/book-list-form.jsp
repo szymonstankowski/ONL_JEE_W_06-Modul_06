@@ -9,6 +9,7 @@
     ${book.title}
     ${book.rating}
     ${book.description}
+    ${book.publisher}
     <a href="/books/edit/${book.id}">Edit</a> <br/>
     <a href="/books/delete/${book.id}">Delete</a> <br/>
 </c:forEach>

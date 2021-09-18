@@ -22,8 +22,8 @@ public class HomePageController {
         model.addAttribute("articles", list);
         return "article-list";
     }
-    @GetMapping("/home/limit")
-    public String showArticles(@RequestParam int limit, Model model){
+    @PostMapping("/home/{limit}")
+    public String showArticles(@PathVariable int limit, Model model){
         List<Article> list = articleDao.findFirst(limit);
         model.addAttribute("limitArticles", list);
         return "article-limited-list";

@@ -3,11 +3,13 @@ package pl.coderslab.app.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.app.entity.Author;
 import pl.coderslab.app.dao.AuthorDao;
 import pl.coderslab.app.entity.Book;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +21,6 @@ public class AuthorController {
     public AuthorController(AuthorDao authorDao){
         this.authorDao=authorDao;
     }
-
-
-
     @RequestMapping("/authors")
     public String findAll(Model model) {
         List<Author> list = authorDao.findAll();
@@ -36,8 +35,10 @@ public class AuthorController {
     }
 
     @PostMapping("/addAuthor")
-    public String create(Author author){
-
+    public String create(@Valid Author author, BindingResult result){
+        if (result.hasErrors()){
+            return "author-form";
+        }
         authorDao.save(author);
         return "redirect:/authors";
     }

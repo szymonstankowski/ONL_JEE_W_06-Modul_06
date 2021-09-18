@@ -2,8 +2,10 @@ package pl.coderslab.app.entity;
 
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +14,26 @@ import java.util.List;
 @Data
 public class Book {
 
-    @ManyToOne
-    private Publisher publisher;
+
     @ManyToMany
+    @NotEmpty
     private List<Author> authors = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size(min = 5)
     private String title;
+    @Range(min = 1, max = 10)
     private int rating;
+    @Size(max = 600)
     private String description;
+
+    @ManyToOne
+    @NotNull
+    private Publisher publisher;
+    @Min(1)
+    int pages;
 
 
 
@@ -35,6 +46,7 @@ public class Book {
         this.rating = rating;
         this.description = description;
     }
+
 
     @Override
     public String toString() {

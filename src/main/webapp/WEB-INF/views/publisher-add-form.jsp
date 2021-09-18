@@ -6,7 +6,10 @@
 <br>
 <form:form method="post" modelAttribute="publisher">
     Publisher name: <form:input path="name"/><br/>
-    <input type="submit" value="save">
+    <form:errors path="name"/><br/>
+    <input type="submit" value="save"><br/>
+    <br/><br/><br/><br/>
+    <form:errors path="*"/>
 </form:form>
 
 

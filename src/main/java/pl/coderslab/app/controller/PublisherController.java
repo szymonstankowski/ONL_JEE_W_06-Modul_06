@@ -2,10 +2,12 @@ package pl.coderslab.app.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.app.entity.Publisher;
 import pl.coderslab.app.dao.PublisherDao;
 
+import javax.validation.Valid;
 import java.util.List;
 @RequestMapping
 @Controller
@@ -46,7 +48,10 @@ public class PublisherController {
     }
 
     @PostMapping("/addPublisher")
-    public String createPublishers(Publisher publisher){
+    public String create(@Valid Publisher publisher, BindingResult result){
+        if (result.hasErrors()){
+            return "publisher-add-form";
+        }
         publisherDao.save(publisher);
         return "redirect:/publishers";
     }

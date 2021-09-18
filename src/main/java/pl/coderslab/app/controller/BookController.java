@@ -3,6 +3,7 @@ package pl.coderslab.app.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.app.dao.AuthorDao;
 import pl.coderslab.app.entity.Author;
@@ -11,6 +12,7 @@ import pl.coderslab.app.dao.BookDao;
 import pl.coderslab.app.entity.Publisher;
 import pl.coderslab.app.dao.PublisherDao;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
@@ -91,16 +93,29 @@ public class BookController {
     }
 
 
-    @RequestMapping("/add")
-    @ResponseBody
-    public String addBook() {
-        Book book = new Book();
-        book.setTitle("Thinking in Java");
-        book.setDescription("Fantasy book");
-        book.setRating(5);
+//    @RequestMapping("/add")
+//    @ResponseBody
+//    public String addBook() {
+//        Book book = new Book();
+//        book.setTitle("Thinking in Java");
+//        book.setDescription("Fantasy book");
+//        book.setRating(5);
+//        bookDao.save(book);
+//        return "Id dodanej książki to:"
+//                + book.getId();
+//    }
+    @GetMapping("/add")
+    public String createForm(Model model){
+        model.addAttribute("book", new Book());
+        return "book-form";
+    }
+    @PostMapping("/add")
+    public String create(@Valid Book book, BindingResult result){
+       if (result.hasErrors()){
+           return "book-form";
+       }
         bookDao.save(book);
-        return "Id dodanej książki to:"
-                + book.getId();
+        return "redirect:/books";
     }
 
     @RequestMapping
@@ -150,16 +165,7 @@ public class BookController {
                 .collect(Collectors.joining(" ||| "));
     }
 
-    @GetMapping("/add")
-    public String createForm(Model model){
-        model.addAttribute("book", new Book());
-        return "book-form";
-    }
-    @PostMapping("/add")
-    public String create(Book book){
-        bookDao.save(book);
-        return "redirect/books";
-    }
+
 
     @ModelAttribute("publishers")
     public List<Publisher> getPublishers(){
